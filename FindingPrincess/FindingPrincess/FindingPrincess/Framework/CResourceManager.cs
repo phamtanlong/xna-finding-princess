@@ -195,6 +195,7 @@ namespace FindingPrincess.Framework
         Item_Mana_Potion_1,
         Item_Mana_Potion_2,
         Item_Mana_Potion_3,
+        LOSE,
     }
     class CResourceManager
     {
@@ -377,6 +378,10 @@ namespace FindingPrincess.Framework
         private CSprite m_Item_Mana_Potion_2;
         private CSprite m_Item_Mana_Potion_3;
         #endregion
+#region otherss......
+        private CSprite m_LOSE;
+#endregion
+
         private static CResourceManager m_ResourceManager;
         private CResourceManager()
         {
@@ -562,6 +567,7 @@ namespace FindingPrincess.Framework
             m_Item_Mana_Potion_1 = new CSprite(IDResource.Item_Mana_Potion_1, 1, 1, 25, 33, 1, 0.97f);
             m_Item_Mana_Potion_2 = new CSprite(IDResource.Item_Mana_Potion_2, 1, 1, 26, 32, 1, 0.97f);
             m_Item_Mana_Potion_3 = new CSprite(IDResource.Item_Mana_Potion_3, 2, 1, 31, 40, 2, 0.97f);
+            m_LOSE = new CSprite(IDResource.LOSE, 4, 5, 194, 130, 20, 0.97f);
         }
 
         public void Init(ContentManager _CM)
@@ -748,6 +754,7 @@ namespace FindingPrincess.Framework
             m_Item_Mana_Potion_1.Init(_CM, "Sprite/Item/Item_Mana_Potion_1", IDResource.Item_Mana_Potion_1, 0, 0, 200.0f);
             m_Item_Mana_Potion_2.Init(_CM, "Sprite/Item/Item_Mana_Potion_2", IDResource.Item_Mana_Potion_2, 0, 0, 200.0f);
             m_Item_Mana_Potion_3.Init(_CM, "Sprite/Item/Item_Mana_Potion_3", IDResource.Item_Mana_Potion_3, 0, 0, 200.0f);
+            m_LOSE.Init(_CM, @"Image\LOSE", IDResource.LOSE, 0, 19, 200.0f);
         }
         public static CResourceManager getInstance()
         {
@@ -1084,6 +1091,8 @@ namespace FindingPrincess.Framework
                     return m_Item_Mana_Potion_2;
                 case IDResource.Item_Mana_Potion_3:
                     return m_Item_Mana_Potion_3;
+                case IDResource.LOSE:
+                    return m_LOSE;
             }
             return null;
         }

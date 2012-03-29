@@ -53,9 +53,9 @@ namespace FindingPrincess.Framework
                 m_Velocity.Y * _gameTime.ElapsedGameTime.Milliseconds);
             m_Velocity.Y += m_Accel.Y * _gameTime.ElapsedGameTime.Milliseconds; 
 
-            if(m_Position.Y < 0)
+            if(m_Position.Y + Bound.Height < 0)
             {
-                m_Position.Y = 0;
+                m_Position.Y = - Bound.Height + 1;
             }
 
             if(m_Position.X < 0)

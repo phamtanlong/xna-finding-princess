@@ -18,6 +18,7 @@ namespace FindingPrincess.Sence
 {
     public class PlaySence : GameSence
     {
+
     #region Attribute........
         FindingPrincess.Framework.CResourceManager _RM;
         FindingPrincess.Framework.CPlayer _Player;
@@ -32,11 +33,12 @@ namespace FindingPrincess.Sence
         public bool IsGameOver = false;
         /************************************************************************/
     #endregion
-        
+
         public PlaySence(Game game)
             : base(game)
         {
             Show();
+            IsGameOver = false;
         }
 
         protected override void LoadContent()
@@ -46,47 +48,25 @@ namespace FindingPrincess.Sence
             _oldMem = Environment.WorkingSet;
             _loadingBar = new LoadingBar((int)_oldMem, (int)MAX_MEM, (int)_oldMem, new Vector2(175, 175), Game.Content);
 
-            //Console.WriteLine("Before Thread......");
             Thread _loadingThread = new Thread(()
             =>
             {
                 _RM = FindingPrincess.Framework.CResourceManager.getInstance();
                 FindingPrincess.Framework.CResourceManager.getInstance().Init(Game.Content);
-                //Console.WriteLine("RM crreated......");
-
                 _Map = new FindingPrincess.Framework.CMap("MAP9.png");
-                //Console.WriteLine("Map created......");
-                //_Engine.ShowMessage("MAP: " + _Map.Width + " : " + _Map.Heigh);
-
                 _Quadtree = new CQuadtree(50, new Vector2(_Map.Width, _Map.Heigh));
-                //Console.WriteLine("QuadTree created......");
-
                 _Camera = new FindingPrincess.Framework.LGCamera(new Rectangle(0, 0, 800, 600));
-                //Console.WriteLine("Camera created......");
-
                 _Player = new FindingPrincess.Framework.CPlayer(IDObject.Player, 350, 200, 0.0f, 0.0f, 0.0f, 0.004f);
                 _Player.Init(Game.Content);
-                //Console.WriteLine("Player created......");
-
                 _Quadtree.AddObject(_Player);
-                //Console.WriteLine("QuadTree Add Player OK......");
-
                 _Map.Init(Game.Content, ref _Quadtree);
-                //Console.WriteLine("Map initted......");
-
-//                 if (_Quadtree != null)
-//                     Console.WriteLine("QuadTree != NULL");
-// 
-//                 if (_Quadtree.IsHavingPlayer)
-//                     Console.WriteLine("QuadTree have Player");
             });
             _loadingThread.Start();
         }
 
         public override void Update(GameTime gameTime)
         {
-            //Console.Title = "" + Environment.TickCount;
-            //////////////////////////////LoadingBar////////////////////////////////
+            ////////////////////////////// LoadingBar ////////////////////////////////
             if (_Quadtree == null || ! _Quadtree.IsHavingPlayer)
             {
                 _nowMem = Environment.WorkingSet;
@@ -108,6 +88,7 @@ namespace FindingPrincess.Sence
                 {
                     EventProcess();
                 }
+
                 //////////////////////////////////////////////////////////////////////////
                 FindingPrincess.Framework.CInput.Update();
 
@@ -140,13 +121,15 @@ namespace FindingPrincess.Sence
                 return;
             }
             //////////////////////////////////////////////////////////////////////////
+            if( ! IsGameOver)
+            {
+                GraphicsDevice.Clear(Color.SkyBlue);
+                _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, _Camera.getTransformation(GraphicsDevice));
 
-            GraphicsDevice.Clear(Color.Black);
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, _Camera.getTransformation(GraphicsDevice));
+                _Quadtree.Draw(_spriteBatch, _Camera.RectCamera, new Vector2(100, 100));
 
-            _Quadtree.Draw(_spriteBatch, _Camera.RectCamera, new Vector2(100, 100));
-
-            _spriteBatch.End();
+                _spriteBatch.End();
+            }
         }
     }
 }
