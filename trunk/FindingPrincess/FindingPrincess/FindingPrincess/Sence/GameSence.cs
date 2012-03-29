@@ -49,8 +49,6 @@ namespace FindingPrincess.Sence
                 if (((DrawableGameComponent)_components[i]).Visible == true)
                     ((DrawableGameComponent)_components[i]).Draw(gameTime);
             }
-
-            base.Draw(gameTime);
         }
 
         public delegate void Handler();

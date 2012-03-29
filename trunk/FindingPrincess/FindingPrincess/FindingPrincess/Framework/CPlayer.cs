@@ -197,7 +197,6 @@ namespace FindingPrincess.Framework
             else
                 m_CurSprite._Effect = SpriteEffects.None;
         }
-
         //Control attack, if state =attacking , add right skill to CurSprite
         //Add effect skill, init effect for that skill
         public void UpdateAttacking(GameTime _gameTime)
@@ -828,7 +827,6 @@ namespace FindingPrincess.Framework
 
             base.UpdateCollision(ref _Object);
         }
-
         //Update position effect ,curframe effect ,remove effect after using
         public void UpdateEffect(GameTime _gameTime)
         {
@@ -877,7 +875,6 @@ namespace FindingPrincess.Framework
             UpdateAnimation(_gameTime);
             UpdateMovement(_gameTime);
         }
-
         public override Rectangle Bound
         {
             get

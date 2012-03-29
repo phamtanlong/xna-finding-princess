@@ -45,7 +45,6 @@ namespace FindingPrincess
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
-
             Content.RootDirectory = "Content";
         }
 
@@ -262,9 +261,7 @@ namespace FindingPrincess
                 return;
             }
             _spriteBatch.Begin();
-
             base.Draw(gameTime);
-
             _spriteBatch.Draw(_activeCursor, new Vector2(Mouse.GetState().X, Mouse.GetState().Y), Color.White);
             _spriteBatch.End();
         }

@@ -36,7 +36,6 @@ namespace FindingPrincess.Sence
             _spriteBatch.DrawString(_font, "GAME OVER", new Vector2(250, 300), Color.White);
 
             _spriteBatch.End();
-            base.Draw(gameTime);
         }
     }
 }
