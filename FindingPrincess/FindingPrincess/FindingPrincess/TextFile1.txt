@@ -1,0 +1,1005 @@
+﻿Các thông tin khác lưu ở đây:
+Hàm CheckInput trong MenuSence có thể được viết như thế này nữa:
+//////////////////////////////////////////////
+        protected KeyboardState _oldKeyboard;
+        protected void CheckInput()
+        {
+            KeyboardState _kbState = Keyboard.GetState();
+            if (_kbState.IsKeyDown(Keys.Up) && _oldKeyboard.IsKeyUp(Keys.Up))
+            {
+                _selectIndex += _menuItems.Length - 1;
+                _selectIndex %= _menuItems.Length;
+            }
+            else
+                if (_kbState.IsKeyDown(Keys.Down) && _oldKeyboard.IsKeyUp(Keys.Down))
+            {
+                _selectIndex += 1;
+                _selectIndex %= _menuItems.Length;
+            }
+
+            _oldKeyboard = _kbState;
+        }
+//////////////////////////////////////////
+Hàm kiểm tra va chạm theo hướng ở AnimationObject
+/////////////////////////////////////////
+
+        // Giao nhau
+        public bool IsIntersect(Rectangle rect)
+        {
+            return _bound.Intersects(rect);
+        }
+
+        // Cắt nhưng ko chứa nhau
+        public bool IsCut(Rectangle rect)
+        {
+            return
+                (IsIntersect(rect))
+                &&
+                (!_bound.Contains(rect))
+                &&
+                (!rect.Contains(_bound));
+        }
+
+        public class Edges
+        {
+            public bool Top, Bottom, Left, Right;
+
+            public Edges(bool top, bool bottom, bool left, bool right)
+            { Top = top; Bottom = bottom; Left = left; Right = right; }
+        }
+
+        public Edges GetEdges(Rectangle rect)
+        {
+            return (!IsCut(rect)) ? null :
+            new Edges
+            (
+                (_bound.Y <= rect.Y),
+                (_bound.Y + _bound.Height >= rect.Y + rect.Height),
+                (_bound.X <= rect.X),
+                (_bound.X + _bound.Width >= rect.X + rect.Width)
+            );
+        }
+
+/////////////////////////////////////////////////////////////////////////////
+Class HelpSence với cái Scroll
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+namespace FindingPrincess.Sence
+{
+    public class HelpSence : GameSence
+    {
+        protected string _helpStr = 
+            "Somewhere between the multitude of wacky NPCs, "
+            +"interesting quests, vicious-yet-cuddly monsters, and the vast freedom "
+            +"of the game world, you realize that MapleStory is not just another MMORPG; its your story!"
+            + "In addition to all the features online gamers have come to expect, "
+            +"MapleStory offers a creative world with a Maple-centric twist supported "
+            +"by weekly events and updates. So join the ranks of millions of Maplers "
+            +"worldwide. Were sure that after spending some time in our world, youll want to make MapleStory your story too."
+            + "Somewhere between the multitude of wacky NPCs, "
+            + "interesting quests, vicious-yet-cuddly monsters, and the vast freedom "
+            + "of the game world, you realize that MapleStory is not just another MMORPG; its your story!"
+            + "In addition to all the features online gamers have come to expect, "
+            + "MapleStory offers a creative world with a Maple-centric twist supported "
+            + "by weekly events and updates. So join the ranks of millions of Maplers "
+            + "worldwide. Were sure that after spending some time in our world, youll want to make MapleStory your story too."
+            + "Somewhere between the multitude of wacky NPCs, "
+            + "interesting quests, vicious-yet-cuddly monsters, and the vast freedom "
+            + "of the game world, you realize that MapleStory is not just another MMORPG; its your story!"
+            + "In addition to all the features online gamers have come to expect, "
+            + "MapleStory offers a creative world with a Maple-centric twist supported "
+            + "by weekly events and updates. So join the ranks of millions of Maplers "
+            + "worldwide. Were sure that after spending some time in our world, youll want to make MapleStory your story too."
+            + "Somewhere between the multitude of wacky NPCs, "
+            + "interesting quests, vicious-yet-cuddly monsters, and the vast freedom "
+            + "of the game world, you realize that MapleStory is not just another MMORPG; its your story!"
+            + "In addition to all the features online gamers have come to expect, "
+            + "MapleStory offers a creative world with a Maple-centric twist supported "
+            + "by weekly events and updates. So join the ranks of millions of Maplers "
+            + "worldwide. Were sure that after spending some time in our world, youll want to make MapleStory your story too."
+            + "Somewhere between the multitude of wacky NPCs, "
+            + "interesting quests, vicious-yet-cuddly monsters, and the vast freedom "
+            + "of the game world, you realize that MapleStory is not just another MMORPG; its your story!"
+            + "In addition to all the features online gamers have come to expect, "
+            + "MapleStory offers a creative world with a Maple-centric twist supported "
+            + "by weekly events and updates. So join the ranks of millions of Maplers "
+            + "worldwide. Were sure that after spending some time in our world, youll want to make MapleStory your story too."
+            + "Somewhere between the multitude of wacky NPCs, "
+            + "interesting quests, vicious-yet-cuddly monsters, and the vast freedom "
+            + "of the game world, you realize that MapleStory is not just another MMORPG; its your story!"
+            + "In addition to all the features online gamers have come to expect, "
+            + "MapleStory offers a creative world with a Maple-centric twist supported "
+            + "by weekly events and updates. So join the ranks of millions of Maplers "
+            + "worldwide. Were sure that after spending some time in our world, youll want to make MapleStory your story too.";
+
+        protected Vector2 _textPosition;
+        protected SpriteFont _font;
+        protected string[] _split;
+        protected float strWidth;
+        protected int numLine;
+        protected int lineLenght;
+
+        const int SPACE = 20;
+
+        public HelpSence(Game game)
+            : base(game)
+        {
+            Show();
+            _font = this.Game.Content.Load<SpriteFont>(@"Font\ReadText");
+            _textPosition = new Vector2(SPACE, 2*SPACE);
+            strWidth = _font.MeasureString(_helpStr).Length();
+            numLine = (int)strWidth / (int)(Game.Window.ClientBounds.Width - 2 * SPACE) + 1;
+            _split = new string[numLine + 1];
+            lineLenght = _helpStr.Length / numLine;
+            int i = 0;
+            while(true)
+            {
+                if (i * lineLenght + lineLenght >= _helpStr.Length - 1)
+                {
+                    if (i * lineLenght <= _helpStr.Length - 1)
+                        _split[i] = _helpStr.Substring(i * lineLenght);
+                    break;
+                }
+                _split[i] = _helpStr.Substring(i * lineLenght, lineLenght);
+                i++;
+            }
+        }
+
+        int _oldScroll = Mouse.GetState().ScrollWheelValue;
+        int _newScroll;
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            _newScroll = Mouse.GetState().ScrollWheelValue;
+
+            _textPosition.X = _textPosition.Y;
+            _textPosition.Y += (_newScroll - _oldScroll) / 5;
+            _oldScroll = _newScroll;
+
+            if (_textPosition.Y >= 2*SPACE)
+                _textPosition.Y = 2*SPACE;
+            if (_textPosition.Y + (_split.Length - 1) * _font.LineSpacing < 600 - 5 * SPACE)
+                _textPosition.Y = _textPosition.X;
+            
+            
+            if (CInput.KeyPressed(Keys.Enter))
+                EventProcess();
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            Texture2D _bg = Game.Content.Load<Texture2D>(@"Image\BackGround\help");
+            this.Game.GraphicsDevice.Clear(Color.Pink);
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(_bg, Vector2.Zero, Color.White);
+            for (int i = 0; i < _split.Length; ++i )
+            {
+                if (_textPosition.Y + i * _font.LineSpacing < 2 * SPACE || _textPosition.Y + i * _font.LineSpacing > 600 - 3 * SPACE)
+                    continue;
+
+                int x = (Game.Window.ClientBounds.Width - (int)_font.MeasureString(_split[i]).Length()) / 2;
+                //_spriteBatch.DrawString(_font, _split[i], new Vector2(x-1, _textPosition.Y + i * _font.LineSpacing - 1), Color.Yellow);
+                _spriteBatch.DrawString(_font, _split[i], new Vector2(x, _textPosition.Y + i * _font.LineSpacing), Color.Black);
+                _spriteBatch.DrawString(_font, _split[i], new Vector2(x - 1, _textPosition.Y + i * _font.LineSpacing - 1), Color.Red);
+            }
+            
+
+            _spriteBatch.End();
+            base.Draw(gameTime);
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+IntroSence
+/////////////////
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using System.Threading;
+using FindingPrincess.Object;
+
+namespace FindingPrincess.Sence
+{
+    public class IntroSence : GameSence
+    {
+        protected const int _DELAYTIME = 0000; // wait 3 seconde
+        protected int _startTime;
+        protected string _introString = "...loading...";
+        protected string _name = "U-I-T";
+        protected Vector2 _namePosition;
+
+        protected Vector2 _textPosition;
+        protected Vector2 _loadingPosition;
+        protected SpriteFont _font;
+        protected SpriteFont _fontLogo;
+        protected ResourceManager _RM;
+        protected Texture2D _loading, _loadingBar;
+        protected Texture2D _introBG;
+        protected Texture2D _LogoUIT;
+        protected Texture2D _LogoGameUIT;
+        protected Texture2D _pig;
+        protected float _scale = 0;
+        protected int red = 0, green = 0, blue = 0;
+        protected bool _isFinish = false;
+
+        protected int _deltaTime;
+
+        public IntroSence(Game game)
+            : base(game)
+        {
+            Show();
+            _startTime = Environment.TickCount;
+            _deltaTime = 0;
+            _font = Game.Content.Load<SpriteFont>(@"Font\Credit_Valley_36");
+            _fontLogo = Game.Content.Load<SpriteFont>(@"Font\UVNHoaKy150");
+            _textPosition = new Vector2(400 - _font.MeasureString(_introString).Length() / 2, 300 + 100);
+            _namePosition = new Vector2(400 - _fontLogo.MeasureString(_name).Length()/2, 300 - _fontLogo.LineSpacing/2 - 70);
+            _loading = Game.Content.Load<Texture2D>(@"Image\BackGround\Loading");
+            _loadingBar = Game.Content.Load<Texture2D>(@"Image\BackGround\LoadingBar");
+            _introBG = Game.Content.Load<Texture2D>(@"Image\BackGround\IntroBG");
+            _pig = Game.Content.Load<Texture2D>(@"Image\BackGround\Pig");
+            _LogoUIT = Game.Content.Load<Texture2D>(@"Image\BackGround\LogoUIT");
+            _LogoGameUIT = Game.Content.Load<Texture2D>(@"Image\BackGround\LogoGameUIT");
+
+            _loadingPosition = new Vector2(400 - _loading.Width / 2, 300 - _loading.Height / 2);
+        }
+
+        int alpha = -100;
+        public override void Update(GameTime gameTime)
+        {
+            if (CInput.KeyDown(Keys.Enter) || CInput.KeyDown(Keys.Escape) || CInput.LeftPressed)
+                EventProcess();
+
+            _deltaTime = Environment.TickCount - _startTime;
+            if (_deltaTime < 1500) return;
+            if(_isFinish == false)
+            {
+                alpha++;
+                red++;
+                green++;
+                blue++;
+                if (green >= 800) _isFinish = true;
+            }
+            else
+            {
+                _scale += 0.005f;
+                if (_scale >= 1)
+                    EventProcess();
+            }
+            
+            base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            _spriteBatch.Begin();
+
+            if(_isFinish == false)
+            {
+                _spriteBatch.Draw(_LogoGameUIT, new Vector2(10, 10), new Color(red,green,blue, alpha)/*Color.White*/);
+                _spriteBatch.Draw(_LogoUIT, new Vector2(800 - 150 - 10, 10), new Color(red,green,blue, alpha)/*Color.White*/);
+                _spriteBatch.Draw(_pig, new Vector2(400 - _pig.Width/2, 600 - _pig.Height - 30), new Color(red,green,blue, alpha));
+
+                _spriteBatch.DrawString(_fontLogo, _name, _namePosition, Color.Black);
+                _spriteBatch.DrawString(_fontLogo, _name, new Vector2(_namePosition.X - 6, _namePosition.Y), new Color(256, 0, 0, 50));
+                
+                this.Game.GraphicsDevice.Clear(Color.Black/*new Color(red, green, blue)*/);
+            }
+            else
+            {
+                this.Game.GraphicsDevice.Clear(new Color(79, 19, 2));
+                _spriteBatch.Draw(_introBG, Vector2.Zero, Color.White);
+                _spriteBatch.Draw(_loading, _loadingPosition, new Rectangle(0, 0, (int)(_scale * 580), 100), Color.White);
+                _spriteBatch.Draw(_loadingBar, _loadingPosition, Color.White);
+                _spriteBatch.DrawString(_font, _introString, _textPosition, Color.White);
+            }
+
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+HelpSence
+//////
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+namespace FindingPrincess.Sence
+{
+    public class HelpSence : GameSence
+    {
+        const int SPACE = 20;
+        protected SpriteFont _font;
+        protected Vector2 _textPosition;
+//         protected Rectangle _menuBound;
+//         protected Texture2D _menu;
+//         protected Texture2D _menuSelect;
+        protected string[] _split;
+        protected int line;
+        protected string _helpStr =
+            "The Windows Internet Explorer 10 Consumer Preview Guide for Developers "
+            + "provides an early look at the developer features coming to the next "
+            + "version of Windows Internet Explorer, as well as the latest HTML5, JavaScript,"
+            + "and Cascading Style Sheets, Level 3 (CSS3) features available to developers of "
+            + "Metro style apps using JavaScript for Windows 8 Consumer Preview. \nBy using "
+            + "the documentation and samples in this guide, developers and designers "
+            + "can prepare to use these new features.\n"
+            + "Internet Explorer 10 is not currently available for Windows 7.\n"
+            +"The most recent release for Windows 7 was Internet Explorer 10 Platform "
+            +"Preview Build 2, on June 29, 2011. \nTherefore, you will notice that the newer "
+            +"features mentioned in this guide are not yet available in the most recent "
+            +"version of IE10 Platform Preview for Windows 7. For a list of changes "
+            +"from Internet Explorer Platform Preview Build 2, see Revision History. \n"
+            +"For a comprehensive list of all new features, see below."
+            + "The Windows Internet Explorer 10 Consumer Preview Guide for Developers "
+            + "provides an early look at the developer features coming to the next "
+            + "version of Windows Internet Explorer, as well as the latest HTML5, JavaScript,"
+            + "and Cascading Style Sheets, Level 3 (CSS3) features available to developers of "
+            + "Metro style apps using JavaScript for Windows 8 Consumer Preview. \nBy using "
+            + "the documentation and samples in this guide, developers and designers "
+            + "can prepare to use these new features.\n"
+            + "Internet Explorer 10 is not currently available for Windows 7.\n"
+            + "The most recent release for Windows 7 was Internet Explorer 10 Platform "
+            + "Preview Build 2, on June 29, 2011. \nTherefore, you will notice that the newer "
+            + "features mentioned in this guide are not yet available in the most recent "
+            + "version of IE10 Platform Preview for Windows 7. For a list of changes "
+            + "from Internet Explorer Platform Preview Build 2, see Revision History. \n"
+            + "For a comprehensive list of all new features, see below.";
+
+        public HelpSence(Game game)
+            : base(game)
+        {
+            Show();
+            _font = this.Game.Content.Load<SpriteFont>(@"Font\ReadText");
+            _textPosition = new Vector2(SPACE, 3 * SPACE);
+            int ll = 60;
+            Split(_helpStr, ll, ref _split);
+//             _menu = game.Content.Load<Texture2D>(@"Image\BackGround\BackButton");
+//             _menuSelect = game.Content.Load<Texture2D>(@"Image\BackGround\BackButtonSelect");
+//             _menuBound = new Rectangle(0, 0, _menu.Width, _menu.Height);
+        }
+
+        int _oldScroll = Mouse.GetState().ScrollWheelValue;
+        int _newScroll;
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            //////////////////////////////////////////////////////////////////////////
+            if(CInput.KeyDown(Keys.Up))
+            {
+                _textPosition.X = _textPosition.Y;
+                _textPosition.Y += 5;
+            }
+            else if(CInput.KeyDown(Keys.Down))
+            {
+                _textPosition.X = _textPosition.Y;
+                _textPosition.Y -= 5;
+            }
+
+            //////////////////////////////////////////////////////////////////////////
+            _newScroll = Mouse.GetState().ScrollWheelValue;
+
+            _textPosition.X = _textPosition.Y;
+            _textPosition.Y += (_newScroll - _oldScroll) / 5;
+            _oldScroll = _newScroll;
+
+            if (_textPosition.Y >= 3 * SPACE)
+                _textPosition.Y = 3 * SPACE;
+
+            if (_textPosition.Y + (_split.Length - 1) * _font.LineSpacing < Game.Window.ClientBounds.Height - 3 * SPACE)
+                _textPosition.Y = _textPosition.X;       
+            
+            if (CInput.KeyPressed(Keys.Enter) || (CInput.LeftPressed /*&& _menuBound.Contains(CInput.MousePoint)*/))
+                EventProcess();
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            Texture2D _bg = Game.Content.Load<Texture2D>(@"Image\BackGround\HelpBG");
+            this.Game.GraphicsDevice.Clear(Color.Pink);
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(_bg, Vector2.Zero, Color.White);
+            for (int i = 0; i < _split.Length; ++i )
+            {
+                if (_split[i] == null) 
+                    continue;
+
+                if (_textPosition.Y + i * _font.LineSpacing < 3 * SPACE 
+                    || _textPosition.Y + i * _font.LineSpacing > Game.Window.ClientBounds.Height - 3 * SPACE)
+                    continue;
+
+                int x = (Game.Window.ClientBounds.Width - (int)_font.MeasureString(_split[i]).Length()) / 2;
+                //_spriteBatch.DrawString(_font, _split[i], new Vector2(x-1, _textPosition.Y + i * _font.LineSpacing - 1), Color.Yellow);
+                _spriteBatch.DrawString(_font, _split[i], new Vector2(x, _textPosition.Y + i * _font.LineSpacing), Color.Black);
+                _spriteBatch.DrawString(_font, _split[i], new Vector2(x - 1, _textPosition.Y + i * _font.LineSpacing - 1), Color.White);
+
+//                 if(_menuBound.Contains(new Point(CInput.MouseX, CInput.MouseY)))
+//                      _spriteBatch.Draw(_menuSelect, _menuBound, Color.White);
+//                  else
+//                      _spriteBatch.Draw(_menu, _menuBound, Color.White);
+            }
+            _spriteBatch.End();
+            base.Draw(gameTime);
+        }
+
+        public void Split(string srcString, int lineLenght, ref string[] split)
+        {
+            const int MAX = 10;
+            split = new string[srcString.Length / lineLenght + MAX];
+            int start = 0;
+            int end = 0;
+            int i = 0;
+
+            while (true)
+            {
+                end = start + lineLenght;
+                if (end > srcString.Length - 1)
+                    end = srcString.Length - 1;
+
+                if (end < srcString.Length - 1)
+                    while (srcString.ElementAt(end) != ' ' && srcString.ElementAt(end) != '\n')
+                    {
+                        end--;
+                        if (end < start) break;
+                    }
+                if (end < start) break;
+
+                split[i] = srcString.Substring(start, end - start);
+
+                if (split[i].Contains('\n'))
+                {
+                    string s = split[i];
+                    int _pos = s.IndexOf('\n');
+                    split[i] = s.Substring(0, _pos);
+                    end = start + _pos;
+                }
+
+                start = end + 1;
+                i++;
+                if (i >= split.Length) break;
+            }
+
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
+//_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, _Camera.getTransformation(GraphicsDevice));
+
+
+///////////////////////////////////////////////
+
+Console.WriteLine("NonPageSysMem64......" + _thisProcess.NonpagedSystemMemorySize64);
+Console.WriteLine("PageMemSize64........" + _thisProcess.PagedMemorySize64);
+Console.WriteLine("PageSysMemSize64....." + _thisProcess.PagedSystemMemorySize64);
+Console.WriteLine("PeakPageMemSize64...." + _thisProcess.PeakPagedMemorySize64);
+Console.WriteLine("PeakVirtMemSize64...." + _thisProcess.PeakVirtualMemorySize64);
+Console.WriteLine("PeakWorkingSet64....." + _thisProcess.PeakWorkingSet64);
+Console.WriteLine("PrivateMemSize64....." + _thisProcess.PrivateMemorySize64);
+Console.WriteLine("VirtualMemSize64....." + _thisProcess.VirtualMemorySize64);
+Console.WriteLine("WorkingSet64........." + _thisProcess.WorkingSet64);
+
+////////////////////////////////////////////
+PlaySence
+///////////
+public class PlaySence : GameSence
+    {
+        FindingPrincess.Framework.CResourceManager _RM;
+        FindingPrincess.Framework.CPlayer _Player;
+        FindingPrincess.Framework.CMap _Map;
+        FindingPrincess.Framework.CQuadtree _Quadtree;
+        FindingPrincess.Framework.CCamera _Camera;
+        // 3 bien dem FPS
+        float elapsedTime = 0.0f;
+        float frameCounter = 0.0f;
+        float FPS = 0.0f;
+        /************************************************************************/
+        float _loadingBar = 0;
+        protected SpriteFont _font;
+        /************************************************************************/
+        const long MAX_MEM = 205500000;
+
+        public PlaySence(Game game)
+            : base(game)
+        {
+            Show();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            _font = Game.Content.Load<SpriteFont>(@"Font\TNR48");
+
+            Thread _loadingThread = new Thread(()
+            =>
+            {
+                _RM = FindingPrincess.Framework.CResourceManager.getInstance();
+                FindingPrincess.Framework.CResourceManager.getInstance().Init(Game.Content);
+                _Player = new FindingPrincess.Framework.CPlayer(IDObject.Player, 350, 200, 0.0f, 0.0f, 0.0f, 0.004f);
+                _Player.Init(Game.Content);
+
+                _Quadtree = new FindingPrincess.Framework.CQuadtree(50, 3200.0f, 600.0f);
+                _Camera = new FindingPrincess.Framework.CCamera(new Rectangle(0, 0, 900, 600));
+
+                _Map = new FindingPrincess.Framework.CMap("Map1.txt");
+                _Map.Init(Game.Content, ref _Quadtree);
+                _Quadtree.AddObject(_Player, null);
+            });
+
+            _loadingThread.Start();
+
+            _oldMem = Environment.WorkingSet;
+            _all2Load = MAX_MEM - _oldMem;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (_Quadtree == null || !_Quadtree._isHavingPlayer)
+            {// Update the LoadingBar
+                _loadingBar++;
+                return;
+            }
+            //////////////////////////////////////////////////////////////////////////
+            //LONG---
+            if (CInput.KeyPressed(Keys.Escape) || CInput.RightPressed)
+            {
+                EventProcess();
+            }
+
+            //HUY---
+            FindingPrincess.Framework.CInput.Update();
+            //dem FPS
+            elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (elapsedTime > 1)
+            {
+                FPS = frameCounter;
+                frameCounter = 0;
+                elapsedTime = 0;
+            }
+            _Camera.Update(_Player, Game.GraphicsDevice);
+            Global.field = _Player.Position.X;
+            _Quadtree.Update(_Camera.CamRect, gameTime);
+
+            base.Update(gameTime);
+        }
+
+        long _oldMem = Environment.WorkingSet;
+        long _all2Load = 0;
+        public override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.White);
+            frameCounter++;
+            _spriteBatch.Begin();
+
+            Process _thisProcess = Process.GetCurrentProcess();
+            //////////////////////////////////////////////////////////////////////////
+            if (_Quadtree == null || !_Quadtree._isHavingPlayer)
+            {//Draw the LoadingBar
+                long _nowMEM = Environment.WorkingSet;
+                
+                _spriteBatch.DrawString(_font, "Loading..." + (100 * (_nowMEM - _oldMem) / _all2Load) + "  %", new Vector2(300, 300), Color.Red);
+                _spriteBatch.End();
+                base.Draw(gameTime);
+                return;
+            }
+            //////////////////////////////////////////////////////////////////////////
+            _Quadtree.Draw(_spriteBatch, _Camera);
+
+            Console.WriteLine("WorkingSet..........." + Environment.WorkingSet);
+
+            _spriteBatch.End();
+            Game.Window.Title = "FPS : " + FPS.ToString() + " Toa do Camera : " + _Camera.Pos.X + " " + _Camera.Pos.Y + "Toa do Player : " + _Player.Position.X + " " + _Player.Position.Y;
+
+            base.Draw(gameTime);
+        }
+    }
+
+//////////////////
+
+QuadTreeNode
+13-3-2012
+Replace with mine
+///////
+
+class CQuadtreeNode
+    {
+        public int m_NodeLvl;
+        public Vector2 m_Pos;
+        public Vector2 m_Size;
+        private List<CObject> m_ListObject;
+        public CQuadtreeNode m_ParentNode;
+        public CQuadtreeNode[] m_ListChild;
+
+        public CQuadtreeNode(CQuadtreeNode _ParentNode, Vector2 _Pos, Vector2 _Size)
+        {
+            if (m_ParentNode == null)
+            {
+                m_ParentNode = null;
+                m_NodeLvl = 1;
+            }
+            else
+            {
+                m_ParentNode = _ParentNode;
+                m_NodeLvl = m_ParentNode.m_NodeLvl + 1;
+            }
+
+            m_Pos = _Pos;
+            m_Size = _Size;
+
+            m_ListChild = null;
+            m_ListObject = new List<CObject>();
+        }
+
+        public void AddObject(CObject _NewObj)
+        {
+            m_ListObject.Add(_NewObj);
+        }
+
+        public void GetObject(ref List<CObject> _ListObject)
+        {
+            int size = m_ListObject.Count;
+
+            for (int i = 0; i < size; ++i)
+            {
+                _ListObject.Add(m_ListObject[i]);
+            }
+        }
+
+        public bool RemoveObject(CObject _RmvObj)
+        {
+            return m_ListObject.Remove(_RmvObj);
+        }
+
+        public Rectangle GetBoundingBox()
+        {
+            Rectangle nodeRect = new Rectangle((int)m_Pos.X, (int)m_Pos.Y, (int)m_Size.X, (int)m_Size.Y);
+
+            return nodeRect;
+        }
+
+        public void UnLoad()
+        {
+            Console.WriteLine("UnLoad content of QuadTreeNode.......");
+        }
+
+    }
+
+/////////////
+
+QuadTree
+/////////////
+
+class CQuadtree
+    {
+        private CQuadtreeNode m_RootNode;
+
+        public float m_QuadWidth;
+        public float m_QuadHeight;
+        public int m_MaxLvl;
+        public bool IsHavingPlayer = false;
+
+        public CQuadtree(int _MaxLv, float _Width, float _Height)
+        {
+            m_MaxLvl = _MaxLv;
+            m_QuadWidth = _Width;
+            m_QuadHeight = _Height;
+            m_RootNode = new CQuadtreeNode(null, new Vector2(0, 0), new Vector2(m_QuadWidth, m_QuadHeight));
+        }
+
+        public void AddObject(CObject _newObj, CQuadtreeNode _QNode)
+        {
+            if (_QNode == null)
+                _QNode = m_RootNode;
+
+            int i = 0;
+            int collisionIndex = 0;
+            int[] index = { -1, -1 };
+
+            int left = (int)_QNode.m_Pos.X;
+            int top = (int)_QNode.m_Pos.Y;
+            int width = (int)_QNode.m_Size.X / 2;
+            int height = (int)_QNode.m_Size.Y / 2;
+
+            Rectangle[] nodeRect = new Rectangle[4];
+            nodeRect[0] = new Rectangle(left, top, width, height);//LT
+            nodeRect[1] = new Rectangle(left + width, top, width, height);//RT
+            nodeRect[2] = new Rectangle(left, top + height, width, height);//RB
+            nodeRect[3] = new Rectangle(left + width, top + height, width, height);//LB
+
+            for (i = 0; i < 4; ++i)
+            {
+                if (_newObj.getBoundingBox().Intersects(nodeRect[i]))
+                {
+                    index[collisionIndex++] = i;
+                    if (collisionIndex > 1)
+                        break;
+                }
+            }
+
+            if (collisionIndex > 1)
+            {
+                _QNode.AddObject(_newObj);
+            }
+            else if (collisionIndex == 1)
+            {
+                if (DevideNode(_QNode))
+                {
+                    AddObject(_newObj, _QNode.m_ListChild[index[0]]);
+                }
+                else
+                {
+                    _QNode.AddObject(_newObj);
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////
+            if(_newObj is CPlayer)
+            {// This is the last thing you Load in method LoadContent in PlaySence, use to make LoadingBar
+                IsHavingPlayer = true;
+            }
+            //////////////////////////////////////////////////////////////////////////
+        }
+
+        private bool DevideNode(CQuadtreeNode _QNode)
+        {
+            if (_QNode.m_NodeLvl < m_MaxLvl)
+            {
+                if (_QNode.m_ListChild == null)
+                {
+                    int left = (int)_QNode.m_Pos.X;
+                    int top = (int)_QNode.m_Pos.Y;
+                    int width = (int)_QNode.m_Size.X / 2;
+                    int height = (int)_QNode.m_Size.Y / 2;
+
+                    _QNode.m_ListChild = new CQuadtreeNode[4];
+
+                    _QNode.m_ListChild[0] = new CQuadtreeNode(_QNode, new Vector2(left, top), new Vector2(width, height));
+                    _QNode.m_ListChild[1] = new CQuadtreeNode(_QNode, new Vector2(left + width, top), new Vector2(width, height));
+                    _QNode.m_ListChild[2] = new CQuadtreeNode(_QNode, new Vector2(left, top + height), new Vector2(width, height));
+                    _QNode.m_ListChild[3] = new CQuadtreeNode(_QNode, new Vector2(left + width, top + height), new Vector2(width, height));
+
+                    return true;
+                }
+                else
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void GetObject(Rectangle _Rect, ref List<CObject> _ListObject, CQuadtreeNode _QNode)
+        {
+            if (_QNode == null)
+                _QNode = m_RootNode;
+
+            if (_QNode.m_ListChild == null)
+            {
+                _QNode.GetObject(ref _ListObject);
+            }
+            else
+            {
+                _QNode.GetObject(ref _ListObject);
+                int collisionIndex = 0, i;
+                int[] index = { -1, -1, -1, -1 };
+
+                for (i = 0; i < 4; i++)
+                {
+                    if (_Rect.Intersects(_QNode.m_ListChild[i].GetBoundingBox()))
+                    {
+                        index[collisionIndex++] = i;
+                    }
+                }
+
+                for (i = 0; i < collisionIndex; ++i)
+                {
+                    GetObject(_Rect, ref _ListObject, _QNode.m_ListChild[index[i]]);
+                }
+
+            }
+        }
+
+        private void RemoveObject(CObject _RmvObj, CQuadtreeNode _QNode)
+        {
+            if (_QNode == null)
+                _QNode = m_RootNode;
+
+            if (_QNode.RemoveObject(_RmvObj))
+                return;
+
+            if (_QNode.m_ListChild == null)
+            {
+                return;
+            }
+            else
+            {
+                int collisionIndex = -1;
+                int i;
+                int[] index = { -1, -1, -1, -1 };
+
+                for (i = 0; i < 4; i++)
+                {
+                    if (_RmvObj.getBoundingBox().Intersects(_QNode.m_ListChild[i].GetBoundingBox()))
+                    {
+                        collisionIndex = i;
+                    }
+                }
+
+                RemoveObject(_RmvObj, _QNode.m_ListChild[collisionIndex]);
+            }
+        }
+
+        public void RemoveObject(CObject _RmvObj)
+        {
+            RemoveObject(_RmvObj, null);
+        }
+
+        public void Update(Rectangle _RectCam, GameTime _GameTime)
+        {
+            List<CObject> pListUpdate = new List<CObject>();
+            List<CObject> pListCollision = new List<CObject>();
+            int updateCount = 0;
+            int collisionCount = 0;
+            int i, j;
+
+            GetObject(_RectCam, ref pListUpdate, null);
+            pListCollision.Clear();
+            pListCollision.AddRange(pListUpdate);
+            updateCount = pListUpdate.Count;
+            //Console.WriteLine("asd" + updateCount);
+            for (i = 0; i < updateCount; ++i)
+            {
+                pListCollision.Remove(pListUpdate[i]);
+                RemoveObject(pListUpdate[i]);
+                //if (pListUpdate[i].Alive)
+               // {z
+                    pListUpdate[i].Update(_GameTime);
+                    //GetObject(_RectCam, ref pListCollision, null);
+
+
+                    collisionCount = pListCollision.Count;
+
+                    for (j = 0; j < collisionCount; ++j)
+                    {
+                        CObject pObj = null;
+                        pObj = pListCollision[j];
+                        pListUpdate[i].UpdateCollision(ref pObj);
+                    }
+              //  }
+
+
+                    if ((pListUpdate[i].ID == IDObject.Barrel) || (pListUpdate[i].ID == IDObject.BaseBrick) || (pListUpdate[i].ID == IDObject.Monster) || (pListUpdate[i].ID == IDObject.Brick) || (pListUpdate[i].ID == IDObject.Player))
+                    {
+                    pListCollision.Add(pListUpdate[i]);
+                    AddObject(pListUpdate[i], null);
+                    }
+                else
+                {
+                    pListUpdate[i] = null;
+                }
+
+            }
+
+
+        }
+
+        public void Draw(SpriteBatch _SpriteBatch, CCamera _Camera)
+        {
+            List<CObject> pListRender = new List<CObject>();
+            int renderCount = 0;
+
+            GetObject(_Camera.CamRect, ref pListRender, null);
+
+            renderCount = pListRender.Count;
+            for (int i = 0; i < renderCount; ++i)
+            {
+                    pListRender[i].Draw(_SpriteBatch);
+            }
+        }
+
+        public void UnLoad()
+        {
+            Console.WriteLine("UnLoad content of QuadTree..........");
+        }
+    }
+/////////////////////////////////////
+Hàm Update QuadTree đã được sửa:
+/////////////
+public void Update(Rectangle _RectCam, GameTime _GameTime)
+        {
+            List<CObject> _listUpdate = new List<CObject>();
+            int updateCount = 0;
+
+            GetObject(_RectCam, ref _listUpdate, null);
+            updateCount = _listUpdate.Count;
+
+            //////////////////////////////////////////////////////////////////////////
+            for (int i = 0; i < updateCount; ++i )
+            {
+                _listUpdate[i].Update(_GameTime);
+            }
+
+            //////////////////////////////////////////////////////////////////////////
+            for (int i = 0; i < updateCount; ++i)
+            {
+                RemoveObject(_listUpdate[i]);
+
+                //////////////////////////////////////////////////////////////////////////
+                if (_listUpdate[i].isLife)
+                    for (int j = 0; j < updateCount; ++j)
+                    {
+                        if(i != j)
+                            _listUpdate[i].UpdateCollision(_listUpdate[j]);
+                    }
+
+                //////////////////////////////////////////////////////////////////////////
+                if (_listUpdate[i].isLife)
+                {
+                    {
+                        AddObject(_listUpdate[i], null);
+                    }
+                }
+            }
+        }
+////////////////
+
+Quy ước về HP của các con quái.
+SnowMan,			400
+SnowMan_Blue,		400
+SnowMan_Red,		450
+SnowMan_Purple,		500
+SnowMan_Lady,		300
+Big_Clown,			500
+Mini_Clown,			350
+Yellow_Bean,		300
+Shark,				400
+Wolf_Man,			600
+Wolf_Orc,			600
+Wolf_Owl,			700
+Old_Panda			700
+
+Quy ước về Effect của Player
+Mỗi cái giảm xuống 50HP
+Effect_Hero_Attack1_Ball	100
+Effect_Hero_Attack2_Ball	120
+Effect_Hero_Attack3_Ball	140
+
+{
+Effect_Hero_Attack4_Ball1_Lv3	150
+}
+
+{
+Effect_Hero_Attack4_Ball1_Lv1	150
+}

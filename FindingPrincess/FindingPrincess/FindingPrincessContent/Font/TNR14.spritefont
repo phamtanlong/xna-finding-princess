@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file contains an xml description of a font, and will be read by the XNA
+Framework Content Pipeline. Follow the comments to customize the appearance
+of the font in your game, and to change the characters which are available to draw
+with.
+-->
+<XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
+  <Asset Type="Graphics:FontDescription">
+
+    <!--
+    Modify this string to change the font that will be imported.
+    -->
+    <FontName>Times New Roman</FontName>
+
+    <!--
+    Size is a float value, measured in points. Modify this value to change
+    the size of the font.
+    -->
+    <Size>20</Size>
+
+    <!--
+    Spacing is a float value, measured in pixels. Modify this value to change
+    the amount of spacing in between characters.
+    -->
+    <Spacing>0</Spacing>
+
+    <!--
+    UseKerning controls the layout of the font. If this value is true, kerning information
+    will be used when placing characters.
+    -->
+    <UseKerning>true</UseKerning>
+
+    <!--
+    Style controls the style of the font. Valid entries are "Regular", "Bold", "Italic",
+    and "Bold, Italic", and are case sensitive.
+    -->
+    <Style>Regular</Style>
+    <CharacterRegions>
+      <CharacterRegion>
+        <Start> </Start>
+        <End>~</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>À</Start>
+        <End>Ã</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ạ</Start>
+        <End>ỹ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>È</Start>
+        <End>Í</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ò</Start>
+        <End>Õ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ù</Start>
+        <End>Ú</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>à</Start>
+        <End>ã</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ý</Start>
+        <End>Ý</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>è</Start>
+        <End>ê</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>ì</Start>
+        <End>í</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>ò</Start>
+        <End>õ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>ù</Start>
+        <End>ù</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>ú</Start>
+        <End>ú</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>ý</Start>
+        <End>ý</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ă</Start>
+        <End>ă</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Đ</Start>
+        <End>đ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ĩ</Start>
+        <End>ĩ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ũ</Start>
+        <End>ũ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ơ</Start>
+        <End>ơ</End>
+      </CharacterRegion>
+      <CharacterRegion>
+        <Start>Ư</Start>
+        <End>ư</End>
+      </CharacterRegion>
+    </CharacterRegions>
+  </Asset>
+</XnaContent>
+
+
+
+
