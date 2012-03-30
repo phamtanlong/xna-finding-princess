@@ -111,16 +111,20 @@ namespace FindingPrincess.Framework
                     /************************************************************************/
                     switch (_MapMatrix[j , i])
                     {
-                            /////////////////////////////// Background //////////////////////////
+                        /////////////////////////////// Background //////////////////////////
                         case 1:
                             CBrick _brick = new CBrick(IDObject.Brick, i * _tileWidth, j * _tileHeigh);
                             _brick.Init(Content);
                             _Quadtree.AddObject(_brick);
                             break;
                         case 2:
+                            _Engine.ShowMessage("CMap --- BaseBrick......");
                             CBaseBrick _basebrick2 = new CBaseBrick(IDObject.BaseBrick, i * _tileWidth, j * _tileHeigh);
                             _basebrick2.Init(Content);
-                            _Quadtree.AddObject(_basebrick2);
+                            if(_Quadtree.AddObject(_basebrick2))
+                            {
+                                _Engine.ShowMessage("QuadTree ----------- BaseBrick");
+                            }
                             break;
 
                             /////////////////////////////// Boss, master ///////////////////////////

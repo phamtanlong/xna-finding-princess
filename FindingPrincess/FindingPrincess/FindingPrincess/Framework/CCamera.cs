@@ -65,7 +65,7 @@ namespace FindingPrincess.Framework
             
             if (_Obj.Position.Y <= 0)
             {
-                m_Pos = new Vector2(m_Pos.X, m_StartPosY - Math.Abs(_Obj.Position.Y)); //m_Pos = new Vector2(m_Pos.X, m_StartPosY - Math.Abs(_Obj.Position.Y));
+                m_Pos = new Vector2(m_Pos.X, m_StartPosY - Math.Abs(_Obj.Position.Y));
             }
             else
                 m_Pos = new Vector2(m_Pos.X, m_StartPosY);

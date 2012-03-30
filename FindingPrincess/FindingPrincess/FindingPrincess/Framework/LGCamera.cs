@@ -16,7 +16,7 @@ namespace FindingPrincess.Framework
     class LGCamera
     {
         Rectangle _rectCamera;
-        int DELTA = 100;
+        int DELTA = 0;
         /************************************************************************/
         /*************___________DELTA_______|_______DELTA__________*************/
         /************************************************************************/
@@ -66,6 +66,7 @@ namespace FindingPrincess.Framework
                 _rectCamera.Y = (int)(_player.Position.Y - DELTA);
             }
             //////////////////////////////////////////////////////////////////////////
+            
             if (_rectCamera.Y < 0)
             {
                 _rectCamera.Y = 0;

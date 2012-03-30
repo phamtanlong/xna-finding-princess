@@ -391,12 +391,10 @@ namespace FindingPrincess.Framework
             m_PlayerJump = new CSprite(IDResource.Player_Jump, 6, 1, 79, 103, 6, 0.1f);
             m_PlayerDie = new CSprite(IDResource.Player_Die, 5, 4, 212, 202, 20, 0.1f);
 
-            m_BaseBrick = new CSprite(IDResource.BaseBrick, 1, 1, 500*4, 50, 1, 0.95f);
+            m_BaseBrick = new CSprite(IDResource.BaseBrick, 1, 1, 2000, 50, 1, 0.95f);
             m_Brick = new CSprite(IDResource.Brick, 1, 1, 50, 50, 1, 1.0f);
             m_Barrel = new CSprite(IDResource.Barrel, 1, 1, 170, 174, 1, 1.0f);
             
-
-
             m_PlayerAttack1 = new CSprite(IDResource.Player_Attack1, 3, 6, (int)2280/4, 255, 16, 0.1f);
             m_PlayerAttack2 = new CSprite(IDResource.Player_Attack2, 5, 3, 1470/5, (int)492 / 3, 15, 0.1f);
             m_PlayerAttack3 = new CSprite(IDResource.Player_Attack3, 5, 4, 274, 231, 20, 0.1f);
