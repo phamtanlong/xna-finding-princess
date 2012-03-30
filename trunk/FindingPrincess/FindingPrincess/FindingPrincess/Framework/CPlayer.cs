@@ -155,10 +155,12 @@ namespace FindingPrincess.Framework
             {
                 m_ListEffect[i].Draw(_spriteBatch);
             }
-            base.Draw(_spriteBatch);
+            
             _spriteBatch.Draw(_helthBar, Position - new Vector2(10, 30), Color.White);
             Vector2 _vec = Position - new Vector2(10, 30) + new Vector2(1, 1);
             _spriteBatch.Draw(_mana, new Rectangle((int)_vec.X, (int)_vec.Y, (int)(_mana.Width * (float)Mana / (float)MAX_MANA), _mana.Height), Color.White);
+            
+            base.Draw(_spriteBatch);
         }
         public override void UpdateAnimation(GameTime _gameTime)
         {
@@ -197,8 +199,6 @@ namespace FindingPrincess.Framework
             else
                 m_CurSprite._Effect = SpriteEffects.None;
         }
-        //Control attack, if state =attacking , add right skill to CurSprite
-        //Add effect skill, init effect for that skill
         public void UpdateAttacking(GameTime _gameTime)
         {
             if (States == Object_States.Attacking)
@@ -827,7 +827,6 @@ namespace FindingPrincess.Framework
 
             base.UpdateCollision(ref _Object);
         }
-        //Update position effect ,curframe effect ,remove effect after using
         public void UpdateEffect(GameTime _gameTime)
         {
             for (int i = 0; i < m_ListEffect.Count; i++)
@@ -868,8 +867,18 @@ namespace FindingPrincess.Framework
                 }
             }
         }
+        int _count2Mana = 0;
         public override void Update(GameTime _gameTime)
         {
+            _count2Mana++;
+            if(_count2Mana > 15)
+            {
+                _count2Mana = 0;
+                Mana++;
+                if (Mana > MAX_MANA)
+                    Mana = MAX_MANA;
+            }
+            
             UpdateAttacking(_gameTime);
             UpdateEffect(_gameTime);
             UpdateAnimation(_gameTime);

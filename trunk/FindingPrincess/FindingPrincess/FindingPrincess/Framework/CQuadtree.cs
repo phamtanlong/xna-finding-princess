@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace FindingPrincess.Framework
 {
-
     #region My code............
     class CQuadtree
     {
@@ -90,7 +89,6 @@ namespace FindingPrincess.Framework
             }
 
             //////////////////////// Sau đó mới xét va chạm ////////////////////////
-            bool _hasAnyCollision = false;
             for (int i = 0; i < _countUpdate; ++i)
             {
                 if (_listUpdate[i].States != Object_States.Die)
@@ -135,6 +133,15 @@ namespace FindingPrincess.Framework
 
             for (int i = 0; i < _listRender.Count; ++i)
             {
+                if (_listRender[i].ID == IDObject.BaseBrick)
+                {
+                    Console.WriteLine("Draw --- Brick." + Environment.TickCount);
+                    Console.WriteLine("BaseBrick: " + _listRender[i].Bound.ToString());
+                }
+                else
+                {
+                    //Console.WriteLine("Camera: " + _cam.ToString());
+                }
                 _listRender[i].Draw(_SpriteBatch);
             }
         }
