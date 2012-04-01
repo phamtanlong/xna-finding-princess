@@ -53,7 +53,7 @@ namespace FindingPrincess.Sence
             {
                 _RM = FindingPrincess.Framework.CResourceManager.getInstance();
                 FindingPrincess.Framework.CResourceManager.getInstance().Init(Game.Content);
-                _Map = new FindingPrincess.Framework.CMap("MAP13.png");
+                _Map = new FindingPrincess.Framework.CMap("MAP9.png");
                 _Quadtree = new CQuadtree(50, new Vector2(_Map.Width, _Map.Heigh));
                 _Camera = new FindingPrincess.Framework.LGCamera(new Rectangle(0, 0, 800, 600));
                 _Player = new FindingPrincess.Framework.CPlayer(IDObject.Player, 350, 200, 0.0f, 0.0f, 0.0f, 0.004f);
