@@ -396,13 +396,16 @@ namespace FindingPrincess.Framework
                             }
                         }
                     }
+                }
             }
-            }
+            #endregion
+
             if ((IsVisible == false) && (m_Item.States != Object_States.Die))
             {
                 m_Item.UpdateCollision(ref _Object);
                 return;
             }
+
             #region Collsion with Player 
             if (_Object.ID == IDObject.Player)
             {
@@ -476,7 +479,6 @@ namespace FindingPrincess.Framework
                     }
                 }
             }
-            #endregion
             #endregion
                 base.UpdateCollision(ref _Object);
         }
