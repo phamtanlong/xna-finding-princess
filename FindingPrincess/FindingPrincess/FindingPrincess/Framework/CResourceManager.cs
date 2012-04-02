@@ -406,7 +406,7 @@ namespace FindingPrincess.Framework
             m_BossHit = new CSprite(IDResource.Boss_Hit, 1, 1, 388, 287, 1, 0.97f);
             m_BossDie1 = new CSprite(IDResource.Boss_Die1, 4, 5, 417, 399, 20, 0.97f);
             m_BossDie2 = new CSprite(IDResource.Boss_Die2, 4, 5, 417, 399, 20, 0.97f);
-            m_BossDie3 = new CSprite(IDResource.Boss_Die3, 3, 5, 417, 399, 13, 0.97f);
+            m_BossDie3 = new CSprite(IDResource.Boss_Die3, 3, 5, 417, 399, 13, 0.97f);//////////////////////////////////////////////////////////////////////////
             m_BossTransform1 = new CSprite(IDResource.Boss_Transform1, 4, 5, 397, 330, 20, 0.97f);
             m_BossTransform2 = new CSprite(IDResource.Boss_Transform2, 4, 5, 397, 330, 20, 0.97f);
             m_BossStand2 = new CSprite(IDResource.Boss_Stand2, 1, 1, 397, 43, 62, 0.97f);
@@ -414,7 +414,7 @@ namespace FindingPrincess.Framework
             m_BossAttack1_2 = new CSprite(IDResource.Boss_Attack1_2, 3, 1, 457, 369, 3, 0.97f);
             m_BossAttack2_1 = new CSprite(IDResource.Boss_Attack2_1, 3, 4, 563, 417, 12, 0.97f);
             m_BossAttack2_2 = new CSprite(IDResource.Boss_Attack2_2, 3, 4, 563, 417, 12, 0.97f);
-            m_BossAttack3   = new CSprite(IDResource.Boss_Attack3, 5, 5, 409, 344, 24, 0.97f);
+            m_BossAttack3   = new CSprite(IDResource.Boss_Attack3, 5, 5, 409, 344, 24, 0.97f);//////////////////////////////////////////////////////////////////////////
             m_BossAttack4_1 = new CSprite(IDResource.Boss_Attack4_1, 2, 5, 767, 364, 10, 0.97f);
             m_BossAttack4_2 = new CSprite(IDResource.Boss_Attack4_2, 2, 5, 767, 364, 10, 0.97f);
             m_BossAttack4_3 = new CSprite(IDResource.Boss_Attack4_3, 2, 5, 767, 364, 10, 0.97f);
@@ -434,10 +434,10 @@ namespace FindingPrincess.Framework
             m_MasterAttack1_3 = new CSprite(IDResource.Master_Attack1_3, 2, 4, 887, 451, 8, 0.97f);
             m_MasterAttack1_4 = new CSprite(IDResource.Master_Attack1_4, 2, 3, 887, 451, 5, 0.97f);
             m_MasterAttack2_1 = new CSprite(IDResource.Master_Attack2_1, 3, 6, 520, 334, 18, 0.97f);
-            m_MasterAttack2_2 = new CSprite(IDResource.Master_Attack2_2, 3, 5, 520, 334, 14, 0.97f);
+            m_MasterAttack2_2 = new CSprite(IDResource.Master_Attack2_2, 3, 5, 520, 334, 14, 0.97f);//////////////////////////////////////////////////////////////////////////
             m_MasterAttack3_1 = new CSprite(IDResource.Master_Attack3_1, 2, 5, 824, 224, 10, 0.97f);
             m_MasterAttack3_2 = new CSprite(IDResource.Master_Attack3_2, 2, 5, 824, 224, 10, 0.97f);
-            m_MasterAttack4 = new CSprite(IDResource.Master_Attack4, 3, 7, 550, 182, 20, 0.97f);
+            m_MasterAttack4 = new CSprite(IDResource.Master_Attack4, 3, 7, 550, 182, 20, 0.97f);//////////////////////////////////////////////////////////////////////////
             m_MasterAttack5 = new CSprite(IDResource.Master_Attack5, 5, 4, 409, 339, 20, 0.97f);
 
             m_EffectMasterAttack1_Hit = new CSprite(IDResource.Effect_Master_Attack1_Hit, 6, 1, 177, 182, 6, 0.01f);
@@ -455,11 +455,11 @@ namespace FindingPrincess.Framework
             m_EffectHeroAttack4_Ball5_Lv1 = new CSprite(IDResource.Effect_Hero_Attack4_Ball5_Lv1, 4, 4, 256, 324, 16, 0.2f);
             m_EffectHeroAttack4_Ball6_Lv1 = new CSprite(IDResource.Effect_Hero_Attack4_Ball6_Lv1, 3, 5, 256, 239, 15, 0.2f);
 
-            m_EffectHeroAttack4_Ball_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball_Lv3, 10, 2, 187, 723, 18, 0.01f);
+            m_EffectHeroAttack4_Ball_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball_Lv3, 10, 2, 187, 723, 18, 0.01f);//////////////////////////////////////////////////////////////////////////
             m_EffectHeroAttack4_Ball1_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball1_Lv3, 4, 4, 289, 201, 16, 0.96f);
             m_EffectHeroAttack4_Ball2_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball2_Lv3, 4, 4, 205, 210, 16, 0.96f);
             m_EffectHeroAttack4_Ball3_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball3_Lv3, 4, 4, 267, 222, 16, 0.96f);
-            m_EffectHeroAttack4_Ball4_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball4_Lv3, 4, 4, 301, 229, 15, 0.96f);
+            m_EffectHeroAttack4_Ball4_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball4_Lv3, 4, 4, 301, 229, 15, 0.96f);//////////////////////////////////////////////////////////////////////////
             m_EffectHeroAttack4_Ball5_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball5_Lv3, 4, 4, 274, 338, 16, 0.96f);
             m_EffectHeroAttack4_Ball6_Lv3 = new CSprite(IDResource.Effect_Hero_Attack4_Ball6_Lv3, 6, 3, 331, 349, 18, 0.96f);
 
@@ -467,9 +467,9 @@ namespace FindingPrincess.Framework
 
             m_EffectHeroAttack5_Effect1 = new CSprite(IDResource.Effect_Hero_Attack5_Effect1, 6, 4, 216, 240, 24, 0.01f);
             m_EffectHeroAttack5_Effect2 = new CSprite(IDResource.Effect_Hero_Attack5_Effect2, 6, 5, 174, 174, 30, 0.01f);
-            m_EffectHeroAttack5_Effect3 = new CSprite(IDResource.Effect_Hero_Attack5_Effect3, 5, 3, 220, 249, 13, 0.01f);
+            m_EffectHeroAttack5_Effect3 = new CSprite(IDResource.Effect_Hero_Attack5_Effect3, 5, 3, 220, 249, 13, 0.01f);//////////////////////////////////////////////////////////////////////////
             m_EffectHeroAttack5_Effect4 = new CSprite(IDResource.Effect_Hero_Attack5_Effect4, 7, 3, 180, 294, 21, 0.01f);
-            m_EffectHeroAttack5_Effect5 = new CSprite(IDResource.Effect_Hero_Attack5_Effect5, 4, 6, 169, 170, 23, 0.01f);
+            m_EffectHeroAttack5_Effect5 = new CSprite(IDResource.Effect_Hero_Attack5_Effect5, 4, 6, 169, 170, 23, 0.01f);//////////////////////////////////////////////////////////////////////////
             m_EffectHeroAttack5_Effect6 = new CSprite(IDResource.Effect_Hero_Attack5_Effect6, 6, 3, 180, 170, 18, 0.01f);
             m_EffectHeroAttack5_Effect7 = new CSprite(IDResource.Effect_Hero_Attack5_Effect7, 6, 3, 241, 276, 18, 0.2f);
 
