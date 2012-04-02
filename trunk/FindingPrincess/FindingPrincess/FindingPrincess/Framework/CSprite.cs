@@ -137,7 +137,7 @@ namespace FindingPrincess.Framework
             m_SrcRect = new Rectangle(0, 0, m_Width, m_Height);
             m_Color = Color.White;
             m_Rotation = 0.0f;
-            m_Origin = new Vector2(0.0f,0.0f);
+            m_Origin = new Vector2(0.0f, 0.0f);
             m_Scale = 1.0f;
             m_Effect = SpriteEffects.FlipHorizontally;
             m_Depth = _Depth;
